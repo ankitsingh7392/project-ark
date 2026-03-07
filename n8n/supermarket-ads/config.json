@@ -1,0 +1,11 @@
+{
+  "store_name": "Mega Mart Supermarket",
+  "excel_path": "/files/product.xlsx",
+  "python_script_path": "parser.py",
+  "max_products": 5,
+  "min_margin_pct": 10,
+  "min_visible_discount_pct": 5,
+  "max_attempts": 3,
+  "approval_timeout_hours": 6,
+  "approval_email": "YOUR_EMAIL@gmail.com"
+}
