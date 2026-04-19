@@ -198,7 +198,7 @@ jupyter
 
 ```bash
 # Option A: Run scraper directly
-python scraper.py --platform flipkart --pages 5 --output data/reviews.csv
+python scraper.py
 
 # Option B: Use the pre-scraped dataset (already in /data)
 # Skip this step entirely
@@ -337,21 +337,6 @@ A short (1–2 page) report is included at `report.pdf` covering:
 - 🚧 Limitations of TF-IDF in production systems
 - 🧭 Recommendations for next steps (embeddings, transformers)
 
-<br/>
-
----
-
-## 🤝 Contributing
-
-This is an academic portfolio project. Feel free to fork it, extend it with word embeddings (GloVe, Word2Vec) or transformer-based features (BERT), and open a PR!
-
-<br/>
-
----
-
-<div align="center">
-
-**Built with 🤍 as part of an NLP & Machine Learning Portfolio**
 
 *If you found this useful, drop a ⭐ on the repo!*
 
