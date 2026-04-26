@@ -37,6 +37,7 @@ class LexiModel:
         confidence = max(probabilities) * 100
         if confidence < threshold:
             prediction = "Unknown"
+        
         return {
             "category": prediction,
             "confidence": round(confidence, 2)
