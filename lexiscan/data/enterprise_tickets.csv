@@ -1,0 +1,109 @@
+ticket_text,department
+"I need a refund for my broken screen.",Billing
+"My invoice is wrong, please refund me.",Billing
+"How do I update my credit card?",Billing
+"The app keeps crashing when I log in.",Technical Support
+"I forgot my password and cannot log in.",Technical Support
+"Can you help me install the software?",Technical Support
+"I want to return this item, it is broken.",Returns
+"Where is my shipping label for the return?",Returns
+"I was charged twice for my subscription this month, please refund the extra amount.",Billing
+"My invoice shows an incorrect total, can you fix it?",Billing
+"I updated my card but payment is still failing.",Billing
+"I need a refund for a duplicate charge on my account.",Billing
+"Why was I billed again after cancelling my plan?",Billing
+"My payment didn’t go through but money was deducted.",Billing
+"I want to update my payment method to a new credit card.",Billing
+"The amount charged is higher than expected this month.",Billing
+"I was billed for a service I never used.",Billing
+"Please send me a copy of my latest invoice.",Billing
+"I think there is a mistake in my billing statement.",Billing
+"My card keeps getting declined during payment.",Billing
+"I want to know the status of my refund request.",Billing
+"I cancelled but still got charged, why?",Billing
+"Payment failed but funds were deducted from my bank.",Billing
+"How do I change my billing address?",Billing
+"I need help understanding my invoice charges.",Billing
+"There are unknown charges on my account.",Billing
+"My subscription renewal amount is incorrect.",Billing
+"Refund has not been processed yet, please check.",Billing
+"The app crashes every time I try to log in.",Technical Support
+"I forgot my password and cannot access my account.",Technical Support
+"The software installation is failing with an error.",Technical Support
+"I am unable to reset my password using the link.",Technical Support
+"App keeps freezing after login.",Technical Support
+"I am getting an unknown error while opening the app.",Technical Support
+"Unable to connect to the server, please help.",Technical Support
+"Login page is not loading properly.",Technical Support
+"I cannot access my account even after resetting password.",Technical Support
+"The system crashes when I upload a file.",Technical Support
+"I see a blank screen after logging in.",Technical Support
+"App performance is very slow and unresponsive.",Technical Support
+"I cannot install the application on my device.",Technical Support
+"Error message appears when I try to update profile.",Technical Support
+"My session keeps timing out automatically.",Technical Support
+"Notifications are not working in the app.",Technical Support
+"I cannot verify my account due to a technical issue.",Technical Support
+"The login OTP is not being received.",Technical Support
+"The app logs me out randomly.",Technical Support
+"I am facing issues accessing features after update.",Technical Support
+"I want to return the product because it is damaged.",Returns
+"The item I received is broken and needs replacement.",Returns
+"How do I initiate a return for my order?",Returns
+"I did not receive a return label for my item.",Returns
+"The product is defective and I want to send it back.",Returns
+"I received the wrong item and want to return it.",Returns
+"Return request is not showing in my account.",Returns
+"How long does the return process take?",Returns
+"I want to exchange the product for another one.",Returns
+"Item quality is poor, I want to return it.",Returns
+"The return pickup has not been scheduled yet.",Returns
+"I need instructions for returning my purchase.",Returns
+"I sent the item back but no update yet.",Returns
+"Where can I download my return shipping label?",Returns
+"I want to cancel my return request.",Returns
+"The product stopped working after one day, want to return.",Returns
+"I received a damaged package, need return support.",Returns
+"I am not satisfied with the item, want to return it.",Returns
+"Return status is not updated in the system.",Returns
+"I need help with returning multiple items.",Returns
+"Do you have any discounts available?",Unknown
+"What are your working hours?",Unknown
+"Where is your company located?",Unknown
+"Do you offer student pricing?",Unknown
+"I want to know more about your services.",Unknown
+"Can I speak to a human agent?",Unknown
+"What is your refund policy?",Unknown
+"Do you have a mobile app?",Unknown
+"Tell me about your company background.",Unknown
+"How long have you been in business?",Unknown
+"Do you offer international shipping?",Unknown
+"Is there any promotion running right now?",Unknown
+"Can you provide your contact details?",Unknown
+"What payment methods do you accept?",Unknown
+"Do you support multiple languages?",Unknown
+"Is there a trial version available?",Unknown
+"How do I create an account?",Unknown
+"What features are included in your service?",Unknown
+"Do you provide customer support on weekends?",Unknown
+"Where can I read reviews about your company?",Unknown
+"I returned an item but have not received refund yet.",Billing
+"The app is not allowing me to update my payment method.",Technical Support
+"I want to return an item and also check refund status.",Returns
+"I cannot log in and also see wrong billing amount.",Technical Support
+"My order arrived damaged and I was charged already.",Returns
+"I need refund but also app is not working properly.",Technical Support
+"I was charged twice and cannot log into my account.",Billing
+"I returned item but no update and no refund yet.",Returns
+"I cannot access my account and payment failed.",Technical Support
+"I want to return item but payment was incorrect.",Returns
+"I see extra charge and app crashes frequently.",Technical Support
+"Refund not processed and login not working.",Technical Support
+"Charged twice and cannot update payment method.",Billing
+"Return process unclear and refund pending.",Returns
+"App crashes and I need refund for subscription.",Technical Support
+"I want to update card but app shows error.",Technical Support
+"Payment deducted but item needs return.",Returns
+"Invoice incorrect and cannot log in.",Technical Support
+"Refund delayed and app not loading.",Technical Support
+"Return item and check billing issue.",Returns
