@@ -34,4 +34,6 @@ Clone the repository and install the required dependencies:
 ```bash
 git clone https://github.com/ankitsingh7392/project-ark.git 
 cd lexiscan
-pip install -r requirements.txt
+pip install uv
+uv sync
+uv run python main.py
