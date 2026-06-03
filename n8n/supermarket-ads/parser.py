@@ -18,17 +18,15 @@ df.columns = (
     .str.replace(" ", "_")
 )
 
-df = df.rename(columns={
-    "item_code": "item_code",
-    "selling_price": "selling_price",
-
-})
+df = df.rename(
+    columns={
+        "item_code": "item_code",
+        "selling_price": "selling_price",
+    }
+)
 
 # Keep only useful columns if present
-wanted = [
-    "item_code", "category", "brand", "name",
-    "mrp", "selling_price", "qty", "status"
-]
+wanted = ["item_code", "category", "brand", "name", "mrp", "selling_price", "qty", "status"]
 df = df[[c for c in wanted if c in df.columns]]
 
 # Convert numerics

@@ -4,12 +4,13 @@ from sklearn.naive_bayes import MultinomialNB
 
 
 class LexiModel:
-
     def __init__(self, use_tfidf=False):
         # 1. Setting up your Bag of Words!
         self.use_tfidf = use_tfidf
         if use_tfidf:
-            self.vectorizer = TfidfVectorizer(stop_words='english', ngram_range=(1,2), min_df=1, max_features=5000)
+            self.vectorizer = TfidfVectorizer(
+                stop_words="english", ngram_range=(1, 2), min_df=1, max_features=5000
+            )
         else:
             self.vectorizer = CountVectorizer(stop_words="english")
 
@@ -26,8 +27,6 @@ class LexiModel:
         print("Training the classifier...\n")
         self.classifier.fit(X_vectors, y_labels)
 
-
-
     def predict(self, text, threshold=50):
         # Convert the new sentence into a vector using the same vocabulary
         text_vector = self.vectorizer.transform([text])
@@ -39,7 +38,4 @@ class LexiModel:
         if confidence < threshold:
             prediction = "Unknown"
 
-        return {
-            "category": prediction,
-            "confidence": round(confidence, 2)
-        }
+        return {"category": prediction, "confidence": round(confidence, 2)}

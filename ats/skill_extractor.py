@@ -26,12 +26,20 @@ class SkillExtractor:
                     {
                         "category": "fallback",
                         "skills": [
-                            "python", "java", "c++", "javascript", "sql",
-                            "machine learning", "deep learning",
-                            "tensorflow", "pytorch",
-                            "docker", "kubernetes",
-                            "aws", "azure"
-                        ]
+                            "python",
+                            "java",
+                            "c++",
+                            "javascript",
+                            "sql",
+                            "machine learning",
+                            "deep learning",
+                            "tensorflow",
+                            "pytorch",
+                            "docker",
+                            "kubernetes",
+                            "aws",
+                            "azure",
+                        ],
                     }
                 ]
             }
@@ -58,10 +66,7 @@ class SkillExtractor:
                 continue
             for skill in self.skills:
                 # compare against full skill
-                score = fuzz.partial_ratio(
-                    token.lower(),
-                    skill.lower()
-                )
+                score = fuzz.partial_ratio(token.lower(), skill.lower())
                 if score >= self.fuzz_threshold:
                     found.add(skill)
         return found
