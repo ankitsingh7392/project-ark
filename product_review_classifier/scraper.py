@@ -1,5 +1,6 @@
-from playwright.sync_api import sync_playwright
 import csv
+
+from playwright.sync_api import sync_playwright
 
 url_template = "https://www.flipkart.com/boat-rockerz-110-40-hrs-playback-enx-technology-beast-mode-asap-charge-bluetooth/product-reviews/itm1707c9f88f559?pid=ACCGS9ZMGQZH4FZF&marketplace=FLIPKART&page={}"
 

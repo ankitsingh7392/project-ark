@@ -6,7 +6,8 @@ MODEL_PATH = os.getenv("W2V_MODEL_PATH", "data/word2vec.kv")
 
 def main():
     from matcher import ATSMatcher
-    matcher = ATSMatcher(model_path=MODEL_PATH)
+
+    ATSMatcher(model_path=MODEL_PATH)
     print(f"ATS v{VERSION} ready. Model: {MODEL_PATH}")
 
 

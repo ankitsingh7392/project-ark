@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+
 from lexiscan import LexiModel
 
 DATA_PATH = os.getenv("LEXISCAN_DATA_PATH", str(Path(__file__).parent / "data" / "enterprise_tickets.csv"))
