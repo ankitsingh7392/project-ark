@@ -1,10 +1,11 @@
+import os
+from pathlib import Path
 from lexiscan import LexiModel
 
+DATA_PATH = os.getenv("LEXISCAN_DATA_PATH", str(Path(__file__).parent / "data" / "enterprise_tickets.csv"))
 
 model = LexiModel(use_tfidf=True)
-
-# Train the model on your dataset
-model.train(data_path="/Users/ankitsingh/Desktop/ankit-github/project-ark/lexiscan/data/enterprise_tickets.csv", text_column="ticket_text", label_column="department")
+model.train(data_path=DATA_PATH, text_column="ticket_text", label_column="department")
 
 # Make a prediction
 inputs = [

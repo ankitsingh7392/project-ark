@@ -1,3 +1,22 @@
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Claude Code (AI tool local config — contains machine-specific paths)
+.claude/
+
+# Infra secrets — never commit real .env files
+infra/**/.env
+
+# Scraped data / output files — commit source code, not artifacts
+reviews.csv
+flipkart.html
+*.xlsx
+*.xls
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

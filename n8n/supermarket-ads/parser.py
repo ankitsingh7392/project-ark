@@ -1,7 +1,9 @@
+import os
 import pandas as pd
 import json
+from pathlib import Path
 
-file_path = "/Users/ankitsingh/Desktop/ai/ark/n8n/supermarket-ads/product.xlsx"
+file_path = os.getenv("PRODUCT_XLSX_PATH", str(Path(__file__).parent / "product.xlsx"))
 
 # Read header from 3rd row (0-based index = 2)
 df = pd.read_excel(file_path, sheet_name="Stock Summary", header=2)
