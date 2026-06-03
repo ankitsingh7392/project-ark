@@ -8,7 +8,8 @@ dependencies = []
 
 [tool.uv.workspace]
 members = [
-    "ats",
+    "packages/ats",
+    "packages/lexiscan",
 ]
 
 [tool.ruff]
@@ -16,7 +17,7 @@ line-length = 100
 target-version = "py312"
 extend-exclude = [
     ".venv",
-    "product_review_classifier/notebook",
+    "packages/review-classifier/notebook",
 ]
 
 [tool.ruff.lint]
