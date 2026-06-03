@@ -8,11 +8,8 @@ venv/
 env/
 .venv/
 
-# Models & data
-data/word2vec.kv
-data/word2vec.kv.vectors.npy
-data/*.bin
-data/*.gz
+# Models & data — never commit training data or binary model files
+data/
 *.npy
 
 # IDE

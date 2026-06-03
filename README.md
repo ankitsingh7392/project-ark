@@ -13,16 +13,17 @@
 
 | Module | Domain | Core Technique | Status |
 |--------|--------|---------------|--------|
-| [**ats**](ats/) | Recruitment automation | TF-IDF weighted Word2Vec + fuzzy skill extraction | Active |
-| [**lexiscan**](lexiscan/) | Support ticket routing | Bag-of-Words / TF-IDF + Naïve Bayes | Active |
-| [**product_review_classifier**](product_review_classifier/) | E-commerce NLP | Feature engineering pipeline (OHE → BoW → TF-IDF) | Active |
-| [**n8n**](n8n/) | Workflow automation | Self-hosted n8n + AI-driven ad generation agent | Active |
+| [**packages/ats**](packages/ats/) | Recruitment automation | TF-IDF weighted Word2Vec + fuzzy skill extraction | Active |
+| [**packages/lexiscan**](packages/lexiscan/) | Support ticket routing | Bag-of-Words / TF-IDF + Naïve Bayes | Active |
+| [**packages/review-classifier**](packages/review-classifier/) | E-commerce NLP | Feature engineering pipeline (OHE → BoW → TF-IDF) | Active |
+| [**automation/n8n**](automation/n8n/) | Workflow infrastructure | Self-hosted n8n + Postgres on Docker Compose | Active |
+| [**automation/supermarket-ads**](automation/supermarket-ads/) | AI agent | Stock-aware promotional ad generation | Active |
 
 ---
 
-## Module Summaries
+## Package Summaries
 
-### `ats` — Resume ↔ Job Description Matcher
+### `packages/ats` — Resume ↔ Job Description Matcher
 
 Screens resumes semantically rather than by keyword overlap. A candidate who writes "ML" when the JD says "Machine Learning" should not be filtered out — this does not filter them out.
 
@@ -36,11 +37,11 @@ Resume (text)  ──┐
 JD     (text)  ──┘                                         ──► Skill Gap Report ──► Gaps
 ```
 
-→ Full docs: [`ats/README.md`](ats/README.md)
+→ Full docs: [`packages/ats/README.md`](packages/ats/README.md)
 
 ---
 
-### `lexiscan` — Enterprise Text Classifier
+### `packages/lexiscan` — Enterprise Text Classifier
 
 Routes incoming text (support tickets, emails, documents) to the correct department or category with a confidence score. Designed to run on CPU without a GPU or cloud dependency.
 
@@ -50,15 +51,13 @@ Routes incoming text (support tickets, emails, documents) to the correct departm
 Raw text ──► Vectoriser (BoW / TF-IDF) ──► Naïve Bayes ──► Category + Confidence
 ```
 
-→ Full docs: [`lexiscan/README.md`](lexiscan/README.md)
+→ Full docs: [`packages/lexiscan/README.md`](packages/lexiscan/README.md)
 
 ---
 
-### `product_review_classifier` — NLP Feature Engineering Pipeline
+### `packages/review-classifier` — NLP Feature Engineering Pipeline
 
-An end-to-end learning exercise that scrapes real product reviews, engineers numerical features three ways, and benchmarks classifiers against each feature set. The primary output is insight, not a production service.
-
-**Pipeline stages:**
+An end-to-end pipeline that scrapes real product reviews, engineers numerical features three ways, and benchmarks classifiers against each feature set.
 
 ```
 Web scrape (Playwright) ──► Preprocess ──► OHE / BoW / TF-IDF
@@ -67,18 +66,18 @@ Web scrape (Playwright) ──► Preprocess ──► OHE / BoW / TF-IDF
 
 **Key finding:** TF-IDF + Logistic Regression consistently outperforms raw BoW across precision, recall, and F1 — establishing it as the right baseline before reaching for embeddings.
 
-→ Full docs: [`product_review_classifier/README.md`](product_review_classifier/README.md)
+→ Full docs: [`packages/review-classifier/README.md`](packages/review-classifier/README.md)
 
 ---
 
-### `n8n` — Automation Infrastructure
+### `automation/` — Workflow Automation
 
-Two independent automation setups built on self-hosted [n8n](https://n8n.io/):
+Two independent setups built on self-hosted [n8n](https://n8n.io/):
 
-- **`self-hosted-server`** — Docker Compose stack: n8n + Postgres + task runners. Fully configured via `.env`; no credentials in source.
-- **`supermarket-ads`** — An n8n workflow + Python agent that reads live stock/pricing data from an Excel sheet and generates promotional ad copy for products with healthy margin.
+- **`automation/n8n`** — Docker Compose stack: n8n + Postgres + task runners. Fully configured via `.env`; no credentials in source.
+- **`automation/supermarket-ads`** — Python agent that reads live stock/pricing data from an inventory sheet and generates promotional ad copy for products with healthy margin.
 
-→ Setup: [`n8n/self-hosted-server/.env.example`](n8n/self-hosted-server/.env.example)
+→ Setup: [`automation/n8n/.env.example`](automation/n8n/.env.example)
 
 ---
 
@@ -86,31 +85,35 @@ Two independent automation setups built on self-hosted [n8n](https://n8n.io/):
 
 ```
 project-ark/
-├── ats/                        # Resume ↔ JD semantic matcher (FastAPI)
-│   ├── embedder.py             # TF-IDF × Word2Vec document vectors
-│   ├── skill_extractor.py      # Exact + fuzzy skill matching
-│   ├── matcher.py              # Similarity + gap scoring
-│   ├── preprocessor.py         # Text cleaning / normalisation
-│   ├── skills_taxonomy.json    # Curated 2,000-term skill taxonomy
-│   └── pyproject.toml
-├── lexiscan/                   # Text classification engine
-│   ├── lexiscan.py             # BoW/TF-IDF + Naïve Bayes model
-│   ├── main.py                 # Training + inference entrypoint
-│   └── data/
-│       └── enterprise_tickets.csv
-├── product_review_classifier/  # NLP feature engineering pipeline
-│   ├── scraper.py              # Playwright-based review scraper
-│   └── notebook/               # Jupyter analysis
-├── n8n/
-│   ├── self-hosted-server/     # Docker Compose + Postgres
-│   └── supermarket-ads/        # Ad-generation agent
-├── infra/
-│   ├── infra.sh                # Service manager (up/down/logs/status)
-│   └── postgres/               # Postgres + pgAdmin compose stack
-├── .github/workflows/ci.yml    # CI pipeline
-├── .pre-commit-config.yaml     # Pre-commit hooks
-├── .gitleaks.toml              # Secret scan config
-└── pyproject.toml              # Workspace root + ruff config
+│
+├── packages/                       # Importable Python modules
+│   ├── ats/                        # Resume ↔ JD semantic matcher (FastAPI)
+│   │   ├── embedder.py             # TF-IDF × Word2Vec document vectors
+│   │   ├── skill_extractor.py      # Exact + fuzzy skill matching
+│   │   ├── matcher.py              # Similarity + gap scoring
+│   │   ├── preprocessor.py         # Text cleaning / normalisation
+│   │   ├── skills_taxonomy.json    # Curated 2,000-term skill taxonomy
+│   │   └── pyproject.toml
+│   ├── lexiscan/                   # Text classification engine
+│   │   ├── lexiscan.py             # BoW/TF-IDF + Naïve Bayes model
+│   │   ├── main.py                 # Training + inference entrypoint
+│   │   └── data/
+│   └── review-classifier/          # NLP feature engineering pipeline
+│       ├── scraper.py              # Playwright-based review scraper
+│       └── notebook/
+│
+├── automation/                     # Workflow agents and automation scripts
+│   ├── n8n/                        # Self-hosted n8n + Postgres stack
+│   └── supermarket-ads/            # Stock-aware ad generation agent
+│
+├── infra/                          # Infrastructure management
+│   ├── infra.sh                    # Service manager (up/down/logs/status)
+│   └── postgres/                   # Postgres + pgAdmin compose stack
+│
+├── .github/workflows/ci.yml        # CI pipeline
+├── .pre-commit-config.yaml         # Pre-commit hooks
+├── .gitleaks.toml                  # Secret scan config
+└── pyproject.toml                  # Workspace root + ruff config
 ```
 
 ---
@@ -124,14 +127,14 @@ git clone https://github.com/ankitsingh7392/project-ark.git
 cd project-ark
 ```
 
-**Run a specific module:**
+**Run a specific package:**
 
 ```bash
 # ATS matcher
-cd ats && uv sync && uvicorn main:app --reload
+cd packages/ats && uv sync && uvicorn main:app --reload
 
 # LexiScan classifier
-cd lexiscan && uv sync && uv run python main.py
+cd packages/lexiscan && uv sync && uv run python main.py
 ```
 
 **Start infrastructure:**
@@ -162,8 +165,6 @@ cd lexiscan && uv sync && uv run python main.py
 ```bash
 pip install pre-commit && pre-commit install
 ```
-
-After this, every `git commit` automatically runs the full hook suite — secrets, lint, format, shell checks — before the commit lands.
 
 ---
 
