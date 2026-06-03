@@ -13,17 +13,17 @@
 
 | Module | Domain | Core Technique | Status |
 |--------|--------|---------------|--------|
-| [**packages/ats**](packages/ats/) | Recruitment automation | TF-IDF weighted Word2Vec + fuzzy skill extraction | Active |
-| [**packages/lexiscan**](packages/lexiscan/) | Support ticket routing | Bag-of-Words / TF-IDF + Naïve Bayes | Active |
-| [**packages/review-classifier**](packages/review-classifier/) | E-commerce NLP | Feature engineering pipeline (OHE → BoW → TF-IDF) | Active |
+| [**projects/ats**](projects/ats/) | Recruitment automation | TF-IDF weighted Word2Vec + fuzzy skill extraction | Active |
+| [**projects/lexiscan**](projects/lexiscan/) | Support ticket routing | Bag-of-Words / TF-IDF + Naïve Bayes | Active |
+| [**projects/review-classifier**](projects/review-classifier/) | E-commerce NLP | Feature engineering pipeline (OHE → BoW → TF-IDF) | Active |
 | [**automation/n8n**](automation/n8n/) | Workflow infrastructure | Self-hosted n8n + Postgres on Docker Compose | Active |
 | [**automation/supermarket-ads**](automation/supermarket-ads/) | AI agent | Stock-aware promotional ad generation | Active |
 
 ---
 
-## Package Summaries
+## Project Summaries
 
-### `packages/ats` — Resume ↔ Job Description Matcher
+### `projects/ats` — Resume ↔ Job Description Matcher
 
 Screens resumes semantically rather than by keyword overlap. A candidate who writes "ML" when the JD says "Machine Learning" should not be filtered out — this does not filter them out.
 
@@ -37,11 +37,11 @@ Resume (text)  ──┐
 JD     (text)  ──┘                                         ──► Skill Gap Report ──► Gaps
 ```
 
-→ Full docs: [`packages/ats/README.md`](packages/ats/README.md)
+→ Full docs: [`projects/ats/README.md`](projects/ats/README.md)
 
 ---
 
-### `packages/lexiscan` — Enterprise Text Classifier
+### `projects/lexiscan` — Enterprise Text Classifier
 
 Routes incoming text (support tickets, emails, documents) to the correct department or category with a confidence score. Designed to run on CPU without a GPU or cloud dependency.
 
@@ -51,11 +51,11 @@ Routes incoming text (support tickets, emails, documents) to the correct departm
 Raw text ──► Vectoriser (BoW / TF-IDF) ──► Naïve Bayes ──► Category + Confidence
 ```
 
-→ Full docs: [`packages/lexiscan/README.md`](packages/lexiscan/README.md)
+→ Full docs: [`projects/lexiscan/README.md`](projects/lexiscan/README.md)
 
 ---
 
-### `packages/review-classifier` — NLP Feature Engineering Pipeline
+### `projects/review-classifier` — NLP Feature Engineering Pipeline
 
 An end-to-end pipeline that scrapes real product reviews, engineers numerical features three ways, and benchmarks classifiers against each feature set.
 
@@ -66,7 +66,7 @@ Web scrape (Playwright) ──► Preprocess ──► OHE / BoW / TF-IDF
 
 **Key finding:** TF-IDF + Logistic Regression consistently outperforms raw BoW across precision, recall, and F1 — establishing it as the right baseline before reaching for embeddings.
 
-→ Full docs: [`packages/review-classifier/README.md`](packages/review-classifier/README.md)
+→ Full docs: [`projects/review-classifier/README.md`](projects/review-classifier/README.md)
 
 ---
 
@@ -86,7 +86,7 @@ Two independent setups built on self-hosted [n8n](https://n8n.io/):
 ```
 project-ark/
 │
-├── packages/                       # Importable Python modules
+├── projects/                       # Importable Python modules
 │   ├── ats/                        # Resume ↔ JD semantic matcher (FastAPI)
 │   │   ├── embedder.py             # TF-IDF × Word2Vec document vectors
 │   │   ├── skill_extractor.py      # Exact + fuzzy skill matching
@@ -131,10 +131,10 @@ cd project-ark
 
 ```bash
 # ATS matcher
-cd packages/ats && uv sync && uvicorn main:app --reload
+cd projects/ats && uv sync && uvicorn main:app --reload
 
 # LexiScan classifier
-cd packages/lexiscan && uv sync && uv run python main.py
+cd projects/lexiscan && uv sync && uv run python main.py
 ```
 
 **Start infrastructure:**
