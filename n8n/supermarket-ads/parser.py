@@ -1,7 +1,9 @@
-import pandas as pd
-import json
+import os
+from pathlib import Path
 
-file_path = "/Users/ankitsingh/Desktop/ai/ark/n8n/supermarket-ads/product.xlsx"
+import pandas as pd
+
+file_path = os.getenv("PRODUCT_XLSX_PATH", str(Path(__file__).parent / "product.xlsx"))
 
 # Read header from 3rd row (0-based index = 2)
 df = pd.read_excel(file_path, sheet_name="Stock Summary", header=2)
@@ -16,17 +18,15 @@ df.columns = (
     .str.replace(" ", "_")
 )
 
-df = df.rename(columns={
-    "item_code": "item_code",
-    "selling_price": "selling_price",
-
-})
+df = df.rename(
+    columns={
+        "item_code": "item_code",
+        "selling_price": "selling_price",
+    }
+)
 
 # Keep only useful columns if present
-wanted = [
-    "item_code", "category", "brand", "name",
-    "mrp", "selling_price", "qty", "status"
-]
+wanted = ["item_code", "category", "brand", "name", "mrp", "selling_price", "qty", "status"]
 df = df[[c for c in wanted if c in df.columns]]
 
 # Convert numerics

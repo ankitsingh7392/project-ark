@@ -1,0 +1,245 @@
+{
+  "version": "1.0",
+  "domain": "IT Jobs",
+  "categories": [
+    {
+      "category": "Programming Languages",
+      "skills": [
+        "Python",
+        "Java",
+        "JavaScript",
+        "TypeScript",
+        "C",
+        "C++",
+        "C#",
+        "Go",
+        "Rust",
+        "PHP",
+        "Ruby",
+        "Kotlin",
+        "Swift",
+        "R",
+        "Scala",
+        "Perl",
+        "Dart",
+        "Shell Scripting"
+      ]
+    },
+    {
+      "category": "Frontend Development",
+      "skills": [
+        "HTML",
+        "CSS",
+        "SASS",
+        "React",
+        "Next.js",
+        "Vue.js",
+        "Angular",
+        "Redux",
+        "Tailwind CSS",
+        "Bootstrap",
+        "Webpack",
+        "Vite",
+        "Responsive Design",
+        "Accessibility",
+        "Progressive Web Apps"
+      ]
+    },
+    {
+      "category": "Backend Development",
+      "skills": [
+        "Node.js",
+        "Express.js",
+        "Django",
+        "Flask",
+        "FastAPI",
+        "Spring Boot",
+        "ASP.NET",
+        "Laravel",
+        "Ruby on Rails",
+        "REST APIs",
+        "GraphQL",
+        "Authentication",
+        "Microservices",
+        "WebSockets"
+      ]
+    },
+    {
+      "category": "Databases",
+      "skills": [
+        "MySQL",
+        "PostgreSQL",
+        "MongoDB",
+        "Redis",
+        "SQLite",
+        "Oracle Database",
+        "Microsoft SQL Server",
+        "Firebase",
+        "Elasticsearch",
+        "Cassandra",
+        "DynamoDB"
+      ]
+    },
+    {
+      "category": "Cloud Computing",
+      "skills": [
+        "AWS",
+        "Microsoft Azure",
+        "Google Cloud Platform",
+        "Cloud Architecture",
+        "Serverless Computing",
+        "Cloud Security",
+        "Cloud Migration",
+        "Terraform",
+        "Infrastructure as Code"
+      ]
+    },
+    {
+      "category": "DevOps",
+      "skills": [
+        "Docker",
+        "Kubernetes",
+        "Jenkins",
+        "GitHub Actions",
+        "GitLab CI/CD",
+        "Ansible",
+        "Prometheus",
+        "Grafana",
+        "Linux Administration",
+        "Nginx",
+        "Apache",
+        "CI/CD Pipelines"
+      ]
+    },
+    {
+      "category": "Data Science & AI",
+      "skills": [
+        "Machine Learning",
+        "Deep Learning",
+        "TensorFlow",
+        "PyTorch",
+        "Scikit-learn",
+        "Pandas",
+        "NumPy",
+        "Data Visualization",
+        "Natural Language Processing",
+        "Computer Vision",
+        "MLOps",
+        "Feature Engineering",
+        "Statistics"
+      ]
+    },
+    {
+      "category": "Cybersecurity",
+      "skills": [
+        "Network Security",
+        "Penetration Testing",
+        "Ethical Hacking",
+        "SIEM",
+        "Identity Access Management",
+        "Vulnerability Assessment",
+        "Incident Response",
+        "Encryption",
+        "Zero Trust Security",
+        "Firewall Management"
+      ]
+    },
+    {
+      "category": "Networking",
+      "skills": [
+        "TCP/IP",
+        "DNS",
+        "VPN",
+        "Routing",
+        "Switching",
+        "Cisco Networking",
+        "Network Troubleshooting",
+        "Load Balancing",
+        "Wireshark"
+      ]
+    },
+    {
+      "category": "Mobile Development",
+      "skills": [
+        "Android Development",
+        "iOS Development",
+        "Flutter",
+        "React Native",
+        "Kotlin",
+        "Swift",
+        "Mobile UI/UX",
+        "Firebase Integration"
+      ]
+    },
+    {
+      "category": "Software Testing",
+      "skills": [
+        "Unit Testing",
+        "Integration Testing",
+        "Selenium",
+        "Cypress",
+        "Playwright",
+        "Jest",
+        "PyTest",
+        "Manual Testing",
+        "Automation Testing",
+        "Performance Testing",
+        "API Testing"
+      ]
+    },
+    {
+      "category": "Data Engineering",
+      "skills": [
+        "Apache Spark",
+        "Hadoop",
+        "Kafka",
+        "ETL Pipelines",
+        "Data Warehousing",
+        "Airflow",
+        "Snowflake",
+        "BigQuery",
+        "Data Lakes"
+      ]
+    },
+    {
+      "category": "System Administration",
+      "skills": [
+        "Linux",
+        "Windows Server",
+        "Bash Scripting",
+        "Active Directory",
+        "Virtualization",
+        "VMware",
+        "System Monitoring",
+        "Backup and Recovery"
+      ]
+    },
+    {
+      "category": "Version Control & Collaboration",
+      "skills": [
+        "Git",
+        "GitHub",
+        "GitLab",
+        "Bitbucket",
+        "Code Review",
+        "Agile",
+        "Scrum",
+        "Jira",
+        "Confluence"
+      ]
+    },
+    {
+      "category": "Soft Skills",
+      "skills": [
+        "Problem Solving",
+        "Communication",
+        "Leadership",
+        "Critical Thinking",
+        "Team Collaboration",
+        "Time Management",
+        "Adaptability",
+        "Project Management"
+      ]
+    }
+  ]
+}
