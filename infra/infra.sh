@@ -34,7 +34,7 @@ _load_secrets() {
         [[ "$line" =~ ^#.*$|^[[:space:]]*$ ]] && continue
         local key="${line%%=*}"
         # Only set if not already exported (local .env takes precedence)
-        [[ -z "${!key+x}" ]] && export "$line"
+        [[ -z "${!key+x}" ]] && export "${line?}"
     done < "$SECRETS_ENV"
 }
 
@@ -70,8 +70,7 @@ ensure_credentials() {
     if [[ -f "$env_file" ]]; then
         while IFS= read -r line || [[ -n "$line" ]]; do
             [[ "$line" =~ ^#.*$|^[[:space:]]*$ ]] && continue
-            local k="${line%%=*}"
-            export "$line"   # service .env wins
+            export "${line?}"   # service .env wins
         done < "$env_file"
     fi
 
@@ -196,7 +195,7 @@ cmd_logs() {
 # ─── usage ─────────────────────────────────────────────────────────────────
 
 usage() {
-    printf "${BOLD}infra.sh${RESET} — project infrastructure manager\n\n"
+    printf '%s — project infrastructure manager\n\n' "${BOLD}infra.sh${RESET}"
     printf "Usage: %s <command> [service...]\n\n" "$0"
     printf "Commands:\n"
     printf "  %-18s %s\n" "up [svc...]"      "Start services and prompt for missing credentials"
