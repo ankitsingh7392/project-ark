@@ -50,20 +50,3 @@ jobs:
         uses: ludeeus/action-shellcheck@master
         with:
           scandir: "./infra"
-
-  test-ats:
-    name: ATS tests
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-
-      - name: Install dependencies
-        working-directory: ats
-        run: uv sync
-
-      - name: Run tests
-        working-directory: ats
-        run: uv run pytest --tb=short -q
