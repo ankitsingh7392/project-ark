@@ -1,7 +1,7 @@
 import os
-import pandas as pd
-import json
 from pathlib import Path
+
+import pandas as pd
 
 file_path = os.getenv("PRODUCT_XLSX_PATH", str(Path(__file__).parent / "product.xlsx"))
 
