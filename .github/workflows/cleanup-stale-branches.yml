@@ -1,0 +1,32 @@
+name: Cleanup Stale Branches
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'  # Every Sunday at midnight UTC
+  workflow_dispatch:
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Delete branches with no activity in 90 days
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          CUTOFF=$(date -d '90 days ago' +%Y-%m-%dT%H:%M:%SZ)
+
+          gh api "repos/$REPO/branches" --paginate \
+            --jq '.[] | select(.name | test("^(main|master|develop)$") | not) | .name' \
+          | while IFS= read -r branch; do
+            last=$(gh api "repos/$REPO/branches/$(python3 -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1]))" "$branch")" \
+              --jq '.commit.commit.committer.date')
+            if [[ "$last" < "$CUTOFF" ]]; then
+              echo "Deleting: $branch  (last commit: $last)"
+              gh api "repos/$REPO/git/refs/heads/$(python3 -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1]))" "$branch")" -X DELETE
+            else
+              echo "Keeping:  $branch  (last commit: $last)"
+            fi
+          done
