@@ -1,0 +1,19 @@
+# Keep the build context small and the image free of local artifacts
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+tests/
+
+# Large model files — mount at runtime instead of baking into the image
+data/*.kv
+data/*.kv.*
+data/*.npy
+data/*.bin
+data/*.gz
+
+# Local tooling
+.vscode/
+.idea/
+.git/
