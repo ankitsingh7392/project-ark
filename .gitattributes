@@ -1,0 +1,23 @@
+# Normalise line endings across platforms — store as LF in the repo
+* text=auto eol=lf
+
+# Shell scripts must stay LF even on Windows checkouts
+*.sh text eol=lf
+
+# Treat binary assets correctly (never diffed or EOL-normalised)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.xlsx binary
+*.xls binary
+*.kv binary
+*.npy binary
+*.bin binary
+*.gz binary
+
+# Collapse generated lockfiles in diffs and exclude from language stats
+uv.lock linguist-generated=true
+**/uv.lock linguist-generated=true
