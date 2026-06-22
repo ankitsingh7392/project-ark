@@ -15,7 +15,7 @@
 |--------|--------|---------------|--------|
 | [**projects/ats**](projects/ats/) | Recruitment automation | TF-IDF weighted Word2Vec + fuzzy skill extraction | Active |
 | [**projects/lexiscan**](projects/lexiscan/) | Support ticket routing | Bag-of-Words / TF-IDF + Naïve Bayes | Active |
-| [**projects/review-classifier**](projects/review-classifier/) | E-commerce NLP | Feature engineering pipeline (OHE → BoW → TF-IDF) | Active |
+| [**projects/review-classifier**](projects/review-classifier/) | E-commerce NLP | Feature engineering pipeline (OHE → BoW → TF-IDF) | WIP |
 | [**automation/n8n**](automation/n8n/) | Workflow infrastructure | Self-hosted n8n + Postgres on Docker Compose | Active |
 | [**automation/supermarket-ads**](automation/supermarket-ads/) | AI agent | Stock-aware promotional ad generation | Active |
 
@@ -27,7 +27,7 @@
 
 Screens resumes semantically rather than by keyword overlap. A candidate who writes "ML" when the JD says "Machine Learning" should not be filtered out — this does not filter them out.
 
-**How it works:** Text is preprocessed and embedded as TF-IDF weighted Word2Vec document vectors. Cosine similarity scores the match. A parallel fuzzy skill extractor (against a curated 2,000-term taxonomy) produces a structured gap report: which skills the candidate has, which are missing, and how critical each gap is based on frequency in the JD.
+**How it works:** Text is preprocessed and embedded as TF-IDF weighted Word2Vec document vectors. Cosine similarity scores the match. A parallel fuzzy skill extractor (against a curated taxonomy of 160+ skills spanning 15 categories) produces a structured gap report: which skills the candidate has, which are missing, and how critical each gap is based on frequency in the JD.
 
 **Serves a REST API** via FastAPI — `POST /match`, `POST /rank`, `POST /gaps`.
 
@@ -64,7 +64,7 @@ Web scrape (Playwright) ──► Preprocess ──► OHE / BoW / TF-IDF
     ──► Sparsity analysis ──► Logistic Regression vs Naïve Bayes benchmark
 ```
 
-**Key finding:** TF-IDF + Logistic Regression consistently outperforms raw BoW across precision, recall, and F1 — establishing it as the right baseline before reaching for embeddings.
+**Status:** the Playwright scraper is implemented; the feature-engineering and classifier-benchmark stages are in progress. The working hypothesis — that TF-IDF + Logistic Regression beats raw Bag-of-Words as a baseline before reaching for embeddings — will be reported with numbers once the evaluation code lands.
 
 → Full docs: [`projects/review-classifier/README.md`](projects/review-classifier/README.md)
 
@@ -88,19 +88,24 @@ project-ark/
 │
 ├── projects/                       # Importable Python modules
 │   ├── ats/                        # Resume ↔ JD semantic matcher (FastAPI)
-│   │   ├── embedder.py             # TF-IDF × Word2Vec document vectors
-│   │   ├── skill_extractor.py      # Exact + fuzzy skill matching
-│   │   ├── matcher.py              # Similarity + gap scoring
-│   │   ├── preprocessor.py         # Text cleaning / normalisation
-│   │   ├── skills_taxonomy.json    # Curated 2,000-term skill taxonomy
+│   │   ├── app/                    # Application package
+│   │   │   ├── main.py             # FastAPI app & endpoints
+│   │   │   ├── embedder.py         # TF-IDF × Word2Vec document vectors
+│   │   │   ├── matcher.py          # Similarity + ranking
+│   │   │   ├── skill_extractor.py  # Exact + fuzzy skill matching
+│   │   │   ├── preprocessor.py     # Text cleaning / normalisation
+│   │   │   └── schemas.py          # Pydantic request/response models
+│   │   ├── data/skills_taxonomy.json  # Curated 160+ skill taxonomy
+│   │   ├── tests/                  # Model-free pytest suite
+│   │   ├── Dockerfile
 │   │   └── pyproject.toml
 │   ├── lexiscan/                   # Text classification engine
 │   │   ├── lexiscan.py             # BoW/TF-IDF + Naïve Bayes model
 │   │   ├── main.py                 # Training + inference entrypoint
 │   │   └── data/
-│   └── review-classifier/          # NLP feature engineering pipeline
+│   └── review-classifier/          # NLP feature engineering pipeline (WIP)
 │       ├── scraper.py              # Playwright-based review scraper
-│       └── notebook/
+│       └── tests/
 │
 ├── automation/                     # Workflow agents and automation scripts
 │   ├── n8n/                        # Self-hosted n8n + Postgres stack
@@ -113,7 +118,7 @@ project-ark/
 ├── .github/workflows/ci.yml        # CI pipeline
 ├── .pre-commit-config.yaml         # Pre-commit hooks
 ├── .gitleaks.toml                  # Secret scan config
-└── pyproject.toml                  # Workspace root + ruff config
+└── pyproject.toml                  # Shared ruff config (each module locks deps independently)
 ```
 
 ---
@@ -130,8 +135,8 @@ cd project-ark
 **Run a specific package:**
 
 ```bash
-# ATS matcher
-cd projects/ats && uv sync && uvicorn main:app --reload
+# ATS matcher (needs the Word2Vec model — see projects/ats/README.md)
+cd projects/ats && uv sync && uv run uvicorn app.main:app --reload
 
 # LexiScan classifier
 cd projects/lexiscan && uv sync && uv run python main.py
@@ -154,6 +159,7 @@ cd projects/lexiscan && uv sync && uv run python main.py
 | Concern | Tool |
 |---------|------|
 | Package management | [uv](https://github.com/astral-sh/uv) |
+| Testing | [pytest](https://docs.pytest.org/) |
 | Lint + format | [ruff](https://github.com/astral-sh/ruff) |
 | Secret scanning | [gitleaks](https://github.com/gitleaks/gitleaks) |
 | Shell lint | [shellcheck](https://www.shellcheck.net/) |

@@ -1,18 +1,28 @@
 [project]
 name = "ats"
 version = "0.1.0"
-description = "Add your description here"
+description = "Resume ↔ job-description semantic matcher: TF-IDF weighted Word2Vec embeddings with fuzzy skill-gap analysis, served over a FastAPI REST API."
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.12"
 dependencies = [
-    "black==24.1.1",
     "fastapi==0.110.0",
-    "httpx==0.26.0",
-    "nltk==3.8.1",
-    "numpy==1.26.3",
-    "pytest==8.0.0",
-    "python-multipart==0.0.9",
-    "rapidfuzz==3.6.1",
-    "scikit-learn==1.4.0",
     "uvicorn[standard]==0.27.1",
+    "pydantic==2.6.1",
+    "gensim>=4.3.3",
+    "scikit-learn>=1.4",
+    "numpy>=1.26,<2",
+    "nltk==3.8.1",
+    "rapidfuzz==3.6.1",
+    "python-multipart==0.0.9",
 ]
+
+[dependency-groups]
+dev = [
+    "pytest==8.0.0",
+    "httpx==0.26.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"

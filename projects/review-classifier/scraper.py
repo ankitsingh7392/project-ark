@@ -1,36 +1,61 @@
+"""Scrape product reviews from a Flipkart product page into a CSV.
+
+Run directly to scrape:  ``python scraper.py``
+The scraping logic is wrapped in functions so the module can be imported
+(e.g. by tests) without launching a browser.
+"""
+
 import csv
 
 from playwright.sync_api import sync_playwright
 
-url_template = "https://www.flipkart.com/boat-rockerz-110-40-hrs-playback-enx-technology-beast-mode-asap-charge-bluetooth/product-reviews/itm1707c9f88f559?pid=ACCGS9ZMGQZH4FZF&marketplace=FLIPKART&page={}"
+URL_TEMPLATE = (
+    "https://www.flipkart.com/boat-rockerz-110-40-hrs-playback-enx-technology-beast-mode-"
+    "asap-charge-bluetooth/product-reviews/itm1707c9f88f559"
+    "?pid=ACCGS9ZMGQZH4FZF&marketplace=FLIPKART&page={}"
+)
+PRODUCT_NAME = "Color Black • Microphone Yes"
+REVIEW_XPATH = f"xpath=//div[text()='Review for: {PRODUCT_NAME}']/following-sibling::div//span"
 
-with sync_playwright() as p:
-    browser = p.chromium.launch(headless=True)
-    page = browser.new_page()
 
-    all_data = []
+def review_url(page_num: int) -> str:
+    """Build the reviews URL for a given (1-based) page number."""
+    return URL_TEMPLATE.format(page_num)
 
-    for page_num in range(1, 11):
-        url = url_template.format(page_num)
-        page.goto(url)
-        page.wait_for_timeout(3000)
-        review_elements = page.locator(
-            "xpath=//div[text()='Review for: Color Black • Microphone Yes']/following-sibling::div//span"
-        )
 
-        count = review_elements.count()
+def scrape_reviews(pages: int = 10, timeout_ms: int = 3000) -> list[list[str]]:
+    """Scrape `[product_name, review]` rows across the first `pages` pages."""
+    rows: list[list[str]] = []
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        page = browser.new_page()
+        try:
+            for page_num in range(1, pages + 1):
+                page.goto(review_url(page_num))
+                page.wait_for_timeout(timeout_ms)
+                review_elements = page.locator(REVIEW_XPATH)
+                for i in range(review_elements.count()):
+                    text = review_elements.nth(i).text_content()
+                    if text:
+                        rows.append([PRODUCT_NAME, text.strip()])
+        finally:
+            browser.close()
+    return rows
 
-        for i in range(count):
-            text = review_elements.nth(i).text_content()
-            if text:
-                all_data.append(["Color Black • Microphone Yes", text.strip()])
 
-    browser.close()
+def write_csv(rows: list[list[str]], path: str = "reviews.csv") -> None:
+    """Write scraped rows to `path` with a header."""
+    with open(path, "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(["product_name", "review"])
+        writer.writerows(rows)
 
-# write CSV
-with open("reviews.csv", "w", newline="", encoding="utf-8") as f:
-    writer = csv.writer(f)
-    writer.writerow(["product_name", "review"])
-    writer.writerows(all_data)
 
-print("Total reviews:", len(all_data))
+def main() -> None:
+    rows = scrape_reviews()
+    write_csv(rows)
+    print("Total reviews:", len(rows))
+
+
+if __name__ == "__main__":
+    main()

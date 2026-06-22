@@ -16,7 +16,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.14"
+          python-version: "3.12"
 
       - name: Install ruff
         run: pip install ruff
@@ -26,6 +26,34 @@ jobs:
 
       - name: Ruff format check
         run: ruff format --check .
+
+  test:
+    name: Tests (${{ matrix.project }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project:
+          - projects/ats
+          - projects/lexiscan
+          - projects/review-classifier
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Sync dependencies
+        working-directory: ${{ matrix.project }}
+        run: uv sync --dev
+
+      - name: Run tests
+        working-directory: ${{ matrix.project }}
+        # Tests are model-free; point the matcher at a missing path so it skips
+        # loading the multi-GB Word2Vec model in CI.
+        env:
+          W2V_MODEL_PATH: /nonexistent
+        run: uv run pytest
 
   secrets:
     name: Secret scan

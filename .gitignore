@@ -8,6 +8,13 @@
 # Claude Code (AI tool local config — contains machine-specific paths)
 .claude/
 
+# IDE / editor config — machine-specific, never committed (see CONTRIBUTING.md)
+.vscode/
+.idea/
+*.code-workspace
+*.iml
+*.swp
+
 # Infra secrets — never commit real .env files
 infra/**/.env
 

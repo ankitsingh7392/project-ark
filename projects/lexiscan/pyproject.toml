@@ -1,10 +1,20 @@
 [project]
 name = "lexiscan"
 version = "0.1.0"
-description = "Add your description here"
+description = "CPU-only enterprise text classifier: Bag-of-Words / TF-IDF vectorisation with a Multinomial Naïve Bayes classifier and confidence-thresholded routing."
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.12"
 dependencies = [
-    "pandas>=3.0.2",
-    "scikit-learn>=1.8.0",
+    "pandas>=2.2",
+    "scikit-learn>=1.4",
 ]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"

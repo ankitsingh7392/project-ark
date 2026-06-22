@@ -8,8 +8,12 @@ venv/
 env/
 .venv/
 
-# Models & data — never commit training data or binary model files
-data/
+# Models — never commit binary Word2Vec model files (mount/download at runtime).
+# The curated data/skills_taxonomy.json IS committed; only the model artifacts are ignored.
+data/word2vec.kv
+data/word2vec.kv.*
+data/*.bin
+data/*.gz
 *.npy
 
 # IDE
