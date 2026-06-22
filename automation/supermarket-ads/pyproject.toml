@@ -1,0 +1,10 @@
+[project]
+name = "supermarket-ads"
+version = "0.1.0"
+description = "Stock-aware promotional ad-copy agent: reads live inventory/pricing from a spreadsheet and selects healthy-margin products to advertise."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pandas>=2.2",
+    "openpyxl>=3.1",
+]

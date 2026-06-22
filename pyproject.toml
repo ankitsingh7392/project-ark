@@ -1,23 +1,19 @@
+# Repository root — holds shared tooling config (ruff, pytest) only.
+# Each module under projects/ and automation/ is a standalone uv project with
+# its own pyproject.toml and lockfile; see CONTRIBUTING.md.
 [project]
 name = "project-ark"
 version = "0.1.0"
-description = "Add your description here"
+description = "A monorepo of focused, production-oriented AI/ML modules sharing a unified toolchain and infrastructure."
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.12"
 dependencies = []
-
-[tool.uv.workspace]
-members = [
-    "projects/ats",
-    "projects/lexiscan",
-]
 
 [tool.ruff]
 line-length = 100
 target-version = "py312"
 extend-exclude = [
     ".venv",
-    "projects/review-classifier/notebook",
 ]
 
 [tool.ruff.lint]

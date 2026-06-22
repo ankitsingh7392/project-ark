@@ -1,0 +1,22 @@
+[project]
+name = "review-classifier"
+version = "0.1.0"
+description = "NLP feature-engineering pipeline: scrapes product reviews and benchmarks OHE / BoW / TF-IDF feature sets against Logistic Regression and Naïve Bayes classifiers."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "playwright>=1.44",
+    "scikit-learn>=1.4",
+    "pandas>=2.2",
+    "numpy>=1.26,<2",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"
