@@ -94,7 +94,7 @@ The following are blocked by `.gitignore` and pre-commit hooks. Do not attempt t
 2. Add a `README.md` — follow the structure of existing project READMEs
 3. Add a `.gitignore` appropriate for the project type
 4. Update the root `README.md`: add a row to the module table and a summary section
-5. If it is a Python project managed by uv, add it to the `[tool.uv.workspace]` members in the root `pyproject.toml`
+5. If it is a Python project, give it its own `pyproject.toml` (managed by uv, with its own `uv.lock`) and a `.python-version` pinned to `3.12`. Each module locks dependencies independently — there is no shared workspace. If it has tests, add it to the `test` matrix in `.github/workflows/ci.yml`.
 
 ---
 
