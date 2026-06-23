@@ -28,7 +28,8 @@ structured skill-gap report.
 - **Multi-candidate ranking** — rank N resumes against a single job description.
 - **Skill-gap analysis** — a curated taxonomy (**160+ skills across 15
   categories**) plus fuzzy matching (RapidFuzz) reports matched vs. missing
-  skills, tolerant of typos and casing.
+  skills, tolerant of typos and casing. Missing skills are ranked by how heavily
+  the job description weights them (TF-IDF importance, normalized to `[0, 1]`).
 - **REST API** — FastAPI with auto-generated OpenAPI docs at `/docs`.
 - **Containerized** — a single `docker build` produces a runnable image.
 - **Tested** — pytest suite for the skill extractor and API contract that runs
@@ -53,8 +54,16 @@ domain terms), each word vector is weighted by its TF-IDF score:
 doc_vector = Σ (tfidf(word) × word2vec(word)) / Σ tfidf(word)
 ```
 
+Every token present in the Word2Vec vocabulary contributes to the document
+vector. Terms the TF-IDF corpus has not seen fall back to the corpus's **mean
+IDF**, so specialized vocabulary still carries its semantics rather than being
+dropped — common skills are down-weighted while rarer, more discriminating
+terms count for more. The TF-IDF weights are bootstrapped from a built-in set of
+representative role descriptions; fitting on your own resume/JD corpus sharpens
+the weighting further.
+
 Cosine similarity is rescaled from `[-1, 1]` to `[0, 1]` and mapped to a label
-(`Strong` / `Good` / `Weak` / `Poor` Match).
+(`Strong` ≥ 0.80 / `Good` ≥ 0.65 / `Weak` ≥ 0.50 / `Poor` Match).
 
 ---
 
@@ -123,6 +132,18 @@ docker run -p 8000:8000 -v "$PWD/data:/app/data" resume-matcher
   "match_label": "Strong Match",
   "matched_skills": ["Python", "Machine Learning", "TensorFlow"],
   "missing_skills": ["Kubernetes", "AWS"] }
+```
+
+**`POST /gaps`**
+
+```json
+// response — missing skills sorted by JD importance (1.0 = most emphasized)
+{ "matched_skills": ["React", "TypeScript"],
+  "missing_skills": [
+    { "skill": "GraphQL",    "importance": 1.0 },
+    { "skill": "Kubernetes", "importance": 0.21 },
+    { "skill": "Docker",     "importance": 0.19 } ],
+  "coverage_pct": 33.3 }
 ```
 
 `resume_text` and `jd_text` must be at least 50 characters (validated by
