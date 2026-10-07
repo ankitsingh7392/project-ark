@@ -38,7 +38,7 @@ JD     (text)  ──┘                                         ──► Skill
 
 ---
 
-### `projects/lexiscan` — Enterprise Text Classifier
+### `projects/lexiscan` — Support Ticket Classifier
 
 Routes incoming text (support tickets, emails, documents) to the correct department with a confidence score. Runs on CPU with no GPU or cloud dependency.
 

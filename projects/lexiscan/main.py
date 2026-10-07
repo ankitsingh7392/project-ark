@@ -13,7 +13,7 @@ from pathlib import Path
 
 from lexiscan import LexiModel
 
-DEFAULT_DATA_PATH = Path(__file__).parent / "data" / "enterprise_tickets.csv"
+DEFAULT_DATA_PATH = Path(__file__).parent / "data" / "support_tickets.csv"
 
 
 def build_parser() -> argparse.ArgumentParser:

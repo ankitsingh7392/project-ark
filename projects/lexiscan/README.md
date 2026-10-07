@@ -1,4 +1,4 @@
-# LexiScan — Enterprise Text Classifier
+# LexiScan — Support Ticket Classifier
 
 > A CPU-only text classification engine that routes support tickets, emails and
 > documents to the right department with a confidence score — and refuses to
@@ -58,7 +58,7 @@ uv run python main.py --threshold 70 "Do you offer student discounts?"
 # Unknown (39.3%)
 ```
 
-The CLI trains on [`data/enterprise_tickets.csv`](data/enterprise_tickets.csv)
+The CLI trains on [`data/support_tickets.csv`](data/support_tickets.csv)
 (100+ labelled tickets across Billing, Technical Support and Returns). Point it
 at your own data with `--data path/to/tickets.csv` or `LEXISCAN_DATA_PATH`; the
 CSV needs `ticket_text` and `department` columns.
@@ -69,7 +69,7 @@ CSV needs `ticket_text` and `department` columns.
 from lexiscan import LexiModel
 
 model = LexiModel(use_tfidf=True)
-model.train("data/enterprise_tickets.csv", text_column="ticket_text", label_column="department")
+model.train("data/support_tickets.csv", text_column="ticket_text", label_column="department")
 
 model.predict("I was charged twice for my subscription")
 # {'category': 'Billing', 'confidence': 53.52}
@@ -84,7 +84,7 @@ lexiscan/
 ├── lexiscan.py    # LexiModel: vectoriser + Naïve Bayes + thresholding
 ├── main.py        # CLI: train on the bundled dataset and classify input
 ├── data/
-│   └── enterprise_tickets.csv
+│   └── support_tickets.csv
 ├── tests/
 │   └── test_lexiscan.py
 └── pyproject.toml
