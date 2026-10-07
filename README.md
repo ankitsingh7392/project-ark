@@ -108,7 +108,8 @@ project-ark/
 │
 ├── libs/                           # Shared code, created only when a pattern repeats across apps (ADR 002)
 │
-├── .github/workflows/              # CI: lint, tests per app, secret scan
+├── Makefile                        # Local CI: make ci
+├── .github/workflows/              # Same checks on GitHub Actions
 ├── .pre-commit-config.yaml         # Pre-commit hooks
 ├── .gitleaks.toml                  # Secret scan config
 └── pyproject.toml                  # Shared ruff config (each app locks deps independently)
@@ -135,11 +136,11 @@ cd apps/ats && uv sync && uv run uvicorn app.main:app --reload
 cd apps/lexiscan && uv sync && uv run python main.py "The app crashes every time I log in"
 ```
 
-**Run the tests:**
+**Run the checks:**
 
 ```bash
-cd apps/ats && W2V_MODEL_PATH=/nonexistent uv run pytest
-cd apps/lexiscan && uv run pytest
+make ci          # lint + tests for every app + secret scan, from the repo root
+make help        # individual targets
 ```
 
 ---
@@ -153,12 +154,12 @@ cd apps/lexiscan && uv run pytest
 | Lint + format | [ruff](https://github.com/astral-sh/ruff) |
 | Secret scanning | [gitleaks](https://github.com/gitleaks/gitleaks) |
 | Pre-commit hooks | [pre-commit](https://pre-commit.com/) |
-| CI | GitHub Actions |
+| CI | `make ci` locally; GitHub Actions runs the same targets |
 
 **Set up pre-commit locally (one-time):**
 
 ```bash
-pip install pre-commit && pre-commit install
+make hooks
 ```
 
 ---

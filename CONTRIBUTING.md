@@ -59,6 +59,17 @@ ci: Pin actions to SHA for supply chain security
 
 PR titles must follow the same `type(scope): Description` format. This is enforced automatically — the PR title check will block merge if the format is wrong.
 
+### Before opening
+
+Run the local CI from the repo root and fix anything it reports:
+
+```bash
+make ci        # lint + tests for every app + secret scan
+```
+
+`make help` lists the individual targets. GitHub Actions is kept as a backstop
+but is not the primary gate; the Makefile runs the same checks.
+
 ### Description
 
 Fill in the PR template. The checklist at the bottom is not optional — every box should be ticked before requesting review.
@@ -106,7 +117,7 @@ git clone https://github.com/ankitsingh7392/project-ark.git
 cd project-ark
 
 # Install pre-commit hooks (one-time)
-pip install pre-commit && pre-commit install
+make hooks
 ```
 
 Pre-commit runs automatically on every `git commit`: secret scanning and ruff lint + format.

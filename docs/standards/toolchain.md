@@ -42,6 +42,12 @@ eval:
 	@echo "N/A: see CHECKLIST.md 6.x"
 ```
 
+## Root Makefile
+
+The repo root has its own `Makefile` whose `ci` target runs lint, every app's
+tests and the secret scan locally. It is the primary gate; GitHub Actions runs
+the same targets when enabled. `make ci` must pass before a PR is opened.
+
 ## CI job shape
 
 One job per target that gates merge, each running with
