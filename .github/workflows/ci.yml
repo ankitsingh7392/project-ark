@@ -36,7 +36,6 @@ jobs:
         project:
           - projects/ats
           - projects/lexiscan
-          - projects/review-classifier
     steps:
       - uses: actions/checkout@v4
 
@@ -67,14 +66,3 @@ jobs:
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  shellcheck:
-    name: Shell lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: ShellCheck
-        uses: ludeeus/action-shellcheck@master
-        with:
-          scandir: "./infra"

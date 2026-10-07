@@ -22,7 +22,6 @@ jobs:
             perf
             test
             ci
-            infra
             revert
           requireScope: false
           subjectPattern: ^[A-Z].+$

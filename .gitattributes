@@ -1,9 +1,6 @@
 # Normalise line endings across platforms — store as LF in the repo
 * text=auto eol=lf
 
-# Shell scripts must stay LF even on Windows checkouts
-*.sh text eol=lf
-
 # Treat binary assets correctly (never diffed or EOL-normalised)
 *.png binary
 *.jpg binary

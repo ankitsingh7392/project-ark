@@ -1,8 +1,2 @@
 [extend]
 useDefault = true
-
-[[allowlists]]
-description = "Example env files contain placeholder values, not real secrets"
-paths = [
-    '''.env\.example$''',
-]

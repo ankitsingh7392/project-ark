@@ -1,11 +1,22 @@
+"""LexiScan: CPU-only text classifier for routing tickets, emails and documents.
+
+Text is vectorised with TF-IDF (or raw Bag-of-Words counts) and classified by a
+Multinomial Naïve Bayes model. Predictions carry a confidence percentage, and
+anything below a configurable threshold is returned as ``"Unknown"`` so that
+low-confidence inputs can be escalated rather than mis-routed.
+"""
+
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
 
+UNKNOWN_LABEL = "Unknown"
+
 
 class LexiModel:
-    def __init__(self, use_tfidf=False):
-        # 1. Setting up your Bag of Words!
+    """Vectoriser + Naïve Bayes classifier with confidence-thresholded routing."""
+
+    def __init__(self, use_tfidf: bool = True):
         self.use_tfidf = use_tfidf
         if use_tfidf:
             self.vectorizer = TfidfVectorizer(
@@ -13,29 +24,24 @@ class LexiModel:
             )
         else:
             self.vectorizer = CountVectorizer(stop_words="english")
-
-        # 2. Set up the Classifier (The Brain)
         self.classifier = MultinomialNB()
 
-    def train(self, data_path, text_column, label_column):
-        print(f"Training the model now... {data_path}")
+    def train(self, data_path: str, text_column: str, label_column: str) -> None:
+        """Fit the vectoriser and classifier on a labelled CSV."""
         df = pd.read_csv(data_path)
-        # Converting text to Bag of Words vectors...
-        df[text_column] = df[text_column].str.lower()
-        X_vectors = self.vectorizer.fit_transform(df[text_column])
-        y_labels = df[label_column]
-        print("Training the classifier...\n")
-        self.classifier.fit(X_vectors, y_labels)
+        texts = df[text_column].astype(str).str.lower()
+        features = self.vectorizer.fit_transform(texts)
+        self.classifier.fit(features, df[label_column])
 
-    def predict(self, text, threshold=50):
-        # Convert the new sentence into a vector using the same vocabulary
-        text_vector = self.vectorizer.transform([text])
-        # Make the mathematical prediction
-        prediction = self.classifier.predict(text_vector)[0]
-        # Calculate how confident the computer is (0 to 100%)
-        probabilities = self.classifier.predict_proba(text_vector)[0]
-        confidence = max(probabilities) * 100
+    def predict(self, text: str, threshold: float = 50) -> dict:
+        """Classify ``text``; return ``{"category", "confidence"}``.
+
+        ``confidence`` is the top class probability in percent. If it falls
+        below ``threshold`` the category is ``"Unknown"``.
+        """
+        features = self.vectorizer.transform([text.lower()])
+        prediction = str(self.classifier.predict(features)[0])
+        confidence = float(self.classifier.predict_proba(features)[0].max()) * 100
         if confidence < threshold:
-            prediction = "Unknown"
-
+            prediction = UNKNOWN_LABEL
         return {"category": prediction, "confidence": round(confidence, 2)}

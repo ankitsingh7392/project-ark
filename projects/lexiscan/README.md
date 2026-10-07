@@ -1,39 +1,119 @@
-# 🚀 LexiScan: Enterprise Text Classification Engine
+# LexiScan — Enterprise Text Classifier
 
-![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
-![NLP](https://img.shields.io/badge/NLP-Bag_of_Words-orange)
-![License](https://img.shields.io/badge/License-MIT-green)
+> A CPU-only text classification engine that routes support tickets, emails and
+> documents to the right department with a confidence score — and refuses to
+> guess when it isn't sure.
 
-## 📌 Overview
-**LexiScan** is a lightweight, high-performance Natural Language Processing (NLP) pipeline built on the **Bag of Words (BoW)** architecture. Designed for enterprise environments, it automatically categorizes large volumes of text data—such as customer support tickets, product reviews, or legal documents—with high accuracy and minimal computational overhead.
+[![Python 3.12+](https://img.shields.io/badge/python-3.12+-3776AB.svg?logo=python&logoColor=white)](https://www.python.org/)
+[![scikit-learn](https://img.shields.io/badge/scikit--learn-1.4+-F7931E.svg?logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-22c55e.svg)](../../LICENSE)
 
-Unlike heavy Large Language Models (LLMs), LexiScan provides transparent, explainable predictions and runs efficiently on standard hardware, making it ideal for real-time triage and classification.
+---
 
-## ✨ Core Features
-* **Custom Tokenization & Cleaning:** Implements targeted stop-word removal to reduce noise while preserving context-critical terminology (e.g., negative sentiment words).
-* **Sparse Matrix Optimization:** Handles high-dimensionality vocabulary efficiently, preventing memory bloat ("The Curse of Dimensionality").
-* **TF-IDF Weighting:** (Optional) Upgrades raw word counts to Term Frequency-Inverse Document Frequency to highlight unique, document-specific keywords.
-* **Explainable AI:** Easily extract which specific words triggered a classification decision.
+## Problem
 
-## 🏗️ Architecture & How It Works
-1. **Data Ingestion:** Reads labeled text data (e.g., CSV, JSON).
-2. **Preprocessing:** Lowercases text, removes punctuation, and applies a custom stop-word filter.
-3. **Vectorization:** Converts text into numerical vectors using `CountVectorizer` (Bag of Words).
-4. **Model Training:** Trains a lightweight classifier (e.g., Naive Bayes or Logistic Regression) on the resulting sparse matrix.
-5. **Inference:** Accepts new, unseen text and outputs a predicted category with a confidence score.
+High-volume inboxes and ticket queues need triage before a human reads them.
+Large language models can do this, but they are expensive per request, slow on
+commodity hardware, and opaque about *why* they chose a label. For a fixed set
+of departments, a linear model over TF-IDF features is faster, cheaper,
+explainable, and accurate enough for first-pass routing.
 
-## 🛠️ Tech Stack
-* **Language:** Python 3.14
-* **Data Processing:** Pandas, NumPy
-* **NLP & ML:** Scikit-Learn (for BoW and Classification), NLTK (for Stop Words)
+---
 
-## 🚀 Getting Started
+## Features
 
-### Prerequisites
-Clone the repository and install the required dependencies:
+- **TF-IDF or Bag-of-Words vectorisation** — unigrams + bigrams with English
+  stop-word removal; the feature space is capped to keep memory bounded.
+- **Multinomial Naïve Bayes classifier** — trains in milliseconds on thousands
+  of examples and predicts in constant time.
+- **Confidence-thresholded routing** — every prediction carries a confidence
+  percentage. Anything below the threshold is returned as `Unknown` so it can
+  be escalated instead of mis-routed.
+- **No external services** — runs entirely on CPU with scikit-learn and pandas.
+
+---
+
+## Architecture
+
+```
+Labelled CSV ──► lowercase ──► TfidfVectorizer (1–2 grams) ──► MultinomialNB.fit
+                                                                     │
+New text ─────► lowercase ──► transform ──► predict_proba ──► max ≥ threshold ? label : Unknown
+```
+
+---
+
+## Quick start
+
+This module is managed with [uv](https://github.com/astral-sh/uv).
+
 ```bash
-git clone https://github.com/ankitsingh7392/project-ark.git 
-cd lexiscan
-pip install uv
+cd projects/lexiscan
 uv sync
-uv run python main.py
+
+uv run python main.py "The app crashes every time I log in"
+# Technical Support (66.98%)
+
+uv run python main.py --threshold 70 "Do you offer student discounts?"
+# Unknown (39.3%)
+```
+
+The CLI trains on [`data/enterprise_tickets.csv`](data/enterprise_tickets.csv)
+(100+ labelled tickets across Billing, Technical Support and Returns). Point it
+at your own data with `--data path/to/tickets.csv` or `LEXISCAN_DATA_PATH`; the
+CSV needs `ticket_text` and `department` columns.
+
+### Use as a library
+
+```python
+from lexiscan import LexiModel
+
+model = LexiModel(use_tfidf=True)
+model.train("data/enterprise_tickets.csv", text_column="ticket_text", label_column="department")
+
+model.predict("I was charged twice for my subscription")
+# {'category': 'Billing', 'confidence': 53.52}
+```
+
+---
+
+## Project structure
+
+```
+lexiscan/
+├── lexiscan.py    # LexiModel: vectoriser + Naïve Bayes + thresholding
+├── main.py        # CLI: train on the bundled dataset and classify input
+├── data/
+│   └── enterprise_tickets.csv
+├── tests/
+│   └── test_lexiscan.py
+└── pyproject.toml
+```
+
+---
+
+## Testing
+
+```bash
+uv run pytest
+```
+
+Tests train on a small in-memory dataset, so they need no data files and run in
+well under a second.
+
+---
+
+## Tech stack
+
+| Layer          | Tool                                          |
+|----------------|-----------------------------------------------|
+| Vectorisation  | scikit-learn (`TfidfVectorizer`, `CountVectorizer`) |
+| Classification | scikit-learn (`MultinomialNB`)                |
+| Data handling  | pandas                                        |
+| Testing        | pytest                                        |
+
+---
+
+## License
+
+[MIT](../../LICENSE)

@@ -12,7 +12,6 @@
 - [ ] `chore` — dependency update, tooling, config
 - [ ] `docs` — documentation only
 - [ ] `ci` — CI/CD pipeline changes
-- [ ] `infra` — infrastructure / Docker / deployment
 
 ## How to test
 

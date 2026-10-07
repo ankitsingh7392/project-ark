@@ -19,7 +19,6 @@ Use the branch prefix that matches your change type:
 | `chore/` | Tooling, dependencies, config |
 | `docs/` | Documentation only |
 | `ci/` | CI/CD pipeline |
-| `infra/` | Docker, infrastructure |
 
 ---
 
@@ -33,9 +32,9 @@ type(scope): Short description
 Optional longer body explaining the why, not the what.
 ```
 
-**Types:** `feat` · `fix` · `chore` · `docs` · `refactor` · `perf` · `test` · `ci` · `infra` · `revert`
+**Types:** `feat` · `fix` · `chore` · `docs` · `refactor` · `perf` · `test` · `ci` · `revert`
 
-**Scope** (optional): the project or area affected — `ats`, `lexiscan`, `review-classifier`, `infra`, `ci`
+**Scope** (optional): the project or area affected — `ats`, `lexiscan`, `ci`
 
 **Rules:**
 - Subject line: imperative mood, starts with uppercase, no period at the end
@@ -50,7 +49,6 @@ fix(lexiscan): Handle empty input without crashing
 chore: Bump ruff to 0.4.0
 docs: Update root README with new project structure
 ci: Pin actions to SHA for supply chain security
-infra(postgres): Add connection pooling config
 ```
 
 ---
@@ -79,7 +77,7 @@ Open the PR, make sure CI is green, then merge. If you are the sole contributor,
 
 The following are blocked by `.gitignore` and pre-commit hooks. Do not attempt to force-add them:
 
-- Secrets, API keys, tokens, passwords — use `.env` files (see `.env.example` in each service)
+- Secrets, API keys, tokens, passwords — use environment variables, never source
 - Training data, PDFs, CSVs, Excel files — keep data out of source control
 - Binary model files (`.bin`, `.kv`, `.npy`)
 - macOS metadata (`.DS_Store`)
@@ -90,7 +88,7 @@ The following are blocked by `.gitignore` and pre-commit hooks. Do not attempt t
 
 ## Adding a new project
 
-1. Create the directory under `projects/` (or `automation/` for workflow agents)
+1. Create the directory under `projects/`
 2. Add a `README.md` — follow the structure of existing project READMEs
 3. Add a `.gitignore` appropriate for the project type
 4. Update the root `README.md`: add a row to the module table and a summary section
@@ -108,4 +106,4 @@ cd project-ark
 pip install pre-commit && pre-commit install
 ```
 
-Pre-commit runs automatically on every `git commit`: secret scanning, ruff lint + format, and shellcheck.
+Pre-commit runs automatically on every `git commit`: secret scanning and ruff lint + format.
