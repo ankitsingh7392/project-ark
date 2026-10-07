@@ -72,7 +72,7 @@ Cosine similarity is rescaled from `[-1, 1]` to `[0, 1]` and mapped to a label
 This module is managed with [uv](https://github.com/astral-sh/uv).
 
 ```bash
-cd projects/ats
+cd apps/ats
 uv sync
 ```
 

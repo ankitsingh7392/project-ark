@@ -86,13 +86,16 @@ The following are blocked by `.gitignore` and pre-commit hooks. Do not attempt t
 
 ---
 
-## Adding a new project
+## Adding a new app
 
-1. Create the directory under `projects/`
-2. Add a `README.md` — follow the structure of existing project READMEs
-3. Add a `.gitignore` appropriate for the project type
-4. Update the root `README.md`: add a row to the module table and a summary section
-5. If it is a Python project, give it its own `pyproject.toml` (managed by uv, with its own `uv.lock`) and a `.python-version` pinned to `3.12`. Each module locks dependencies independently — there is no shared workspace. If it has tests, add it to the `test` matrix in `.github/workflows/ci.yml`.
+Read [`CONSTITUTION.md`](CONSTITUTION.md) for the principles and
+[`CHECKLIST.md`](CHECKLIST.md) for what must be true before the project is done.
+
+1. Create the directory under `apps/` with its own `pyproject.toml`, `uv.lock` and `.python-version` pinned to `3.12`. Each app locks dependencies independently — see [ADR 001](docs/adr/001-standalone-uv-project-per-module.md). Shared code goes in `libs/` only once two apps need it — see [ADR 002](docs/adr/002-apps-and-libs-layout.md).
+2. Copy [`docs/templates/CHECKLIST.md`](docs/templates/CHECKLIST.md) into the project, set the project type, and work through it in the order given in `CHECKLIST.md` §0.2.
+3. Add a `Makefile` with the targets defined in [`docs/standards/toolchain.md`](docs/standards/toolchain.md).
+4. Add the app to every applicable job in `.github/workflows/ci.yml`.
+5. Update the root `README.md`: add a row to the app table and a summary section.
 
 ---
 
