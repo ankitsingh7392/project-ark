@@ -48,7 +48,7 @@ New text ─────► lowercase ──► transform ──► predict_prob
 This module is managed with [uv](https://github.com/astral-sh/uv).
 
 ```bash
-cd projects/lexiscan
+cd apps/lexiscan
 uv sync
 
 uv run python main.py "The app crashes every time I log in"

@@ -1,5 +1,5 @@
 # Repository root — holds shared tooling config (ruff, pytest) only.
-# Each module under projects/ is a standalone uv project with
+# Each app under apps/ is a standalone uv project with
 # its own pyproject.toml and lockfile; see CONTRIBUTING.md.
 [project]
 name = "project-ark"

@@ -9,18 +9,18 @@
 
 ---
 
-## Modules
+## Apps
 
-| Module | Domain | Core Technique | Interface |
+| App | Domain | Core Technique | Interface |
 |--------|--------|---------------|-----------|
-| [**projects/ats**](projects/ats/) | Recruitment automation | TF-IDF weighted Word2Vec + fuzzy skill extraction | FastAPI REST service, Docker |
-| [**projects/lexiscan**](projects/lexiscan/) | Support ticket routing | TF-IDF + Multinomial Naïve Bayes with confidence thresholding | Python library + CLI |
+| [**apps/ats**](apps/ats/) | Recruitment automation | TF-IDF weighted Word2Vec + fuzzy skill extraction | FastAPI REST service, Docker |
+| [**apps/lexiscan**](apps/lexiscan/) | Support ticket routing | TF-IDF + Multinomial Naïve Bayes with confidence thresholding | Python library + CLI |
 
 ---
 
-## Project Summaries
+## App Summaries
 
-### `projects/ats` — Resume ↔ Job Description Matcher
+### `apps/ats` — Resume ↔ Job Description Matcher
 
 Screens resumes semantically rather than by keyword overlap. A candidate who writes "ML" when the job description says "Machine Learning" is not filtered out.
 
@@ -34,11 +34,11 @@ Resume (text)  ──┐
 JD     (text)  ──┘                                         ──► Skill Gap Report ──► Gaps
 ```
 
-→ Full docs: [`projects/ats/README.md`](projects/ats/README.md)
+→ Full docs: [`apps/ats/README.md`](apps/ats/README.md)
 
 ---
 
-### `projects/lexiscan` — Support Ticket Classifier
+### `apps/lexiscan` — Support Ticket Classifier
 
 Routes incoming text (support tickets, emails, documents) to the correct department with a confidence score. Runs on CPU with no GPU or cloud dependency.
 
@@ -48,7 +48,27 @@ Routes incoming text (support tickets, emails, documents) to the correct departm
 Raw text ──► Vectoriser (BoW / TF-IDF) ──► Naïve Bayes ──► Category + Confidence
 ```
 
-→ Full docs: [`projects/lexiscan/README.md`](projects/lexiscan/README.md)
+→ Full docs: [`apps/lexiscan/README.md`](apps/lexiscan/README.md)
+
+---
+
+## How This Repo Is Built
+
+Every app is held to the same written standard, so the quality is checkable rather than claimed.
+
+| Document | Answers |
+|----------|---------|
+| [`CONSTITUTION.md`](CONSTITUTION.md) | How we build. The principles behind every decision. |
+| [`CHECKLIST.md`](CHECKLIST.md) | What must be true before an app is done, with the command a reviewer runs to verify each item. |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | Branches, commits, pull requests. |
+| [`docs/standards/`](docs/standards/) | The detailed standard behind each checklist section: toolchain, evaluation, observability, benchmarking, security, failure modes, cost. |
+| [`docs/adr/`](docs/adr/) | Why repository-wide decisions were made: one uv project per app, the `apps/` and `libs/` layout. |
+| [`docs/templates/`](docs/templates/) | Files to copy when starting an app or recording a decision. |
+
+```
+CONSTITUTION.md  ──►  CHECKLIST.md  ──►  apps/<name>/    ──►  CI / evaluation gate
+  principles          requirements        implementation + evidence     enforcement
+```
 
 ---
 
@@ -57,7 +77,16 @@ Raw text ──► Vectoriser (BoW / TF-IDF) ──► Naïve Bayes ──► Ca
 ```
 project-ark/
 │
-├── projects/
+├── CONSTITUTION.md                 # Principles: how we build
+├── CHECKLIST.md                    # Definition of done: what must be true
+├── CONTRIBUTING.md                 # How contributors work
+│
+├── docs/
+│   ├── adr/                        # Repository-wide decision records
+│   ├── standards/                  # Detailed engineering standards
+│   └── templates/                  # CHECKLIST, ADR, architecture, failure-mode, cost templates
+│
+├── apps/                           # Deployable services, one standalone uv project each
 │   ├── ats/                        # Resume ↔ JD semantic matcher (FastAPI)
 │   │   ├── app/                    # Application package
 │   │   │   ├── main.py             # FastAPI app & endpoints
@@ -77,38 +106,41 @@ project-ark/
 │       ├── tests/
 │       └── pyproject.toml
 │
-├── .github/workflows/              # CI: lint, tests per module, secret scan
+├── libs/                           # Shared code, created only when a pattern repeats across apps (ADR 002)
+│
+├── Makefile                        # Local CI: make ci
+├── .github/workflows/              # Same checks on GitHub Actions
 ├── .pre-commit-config.yaml         # Pre-commit hooks
 ├── .gitleaks.toml                  # Secret scan config
-└── pyproject.toml                  # Shared ruff config (each module locks deps independently)
+└── pyproject.toml                  # Shared ruff config (each app locks deps independently)
 ```
 
 ---
 
 ## Getting Started
 
-This repo uses [uv](https://github.com/astral-sh/uv) for dependency management. Each module is a standalone project with its own lockfile.
+This repo uses [uv](https://github.com/astral-sh/uv) for dependency management. Each app is a standalone project with its own lockfile.
 
 ```bash
 git clone https://github.com/ankitsingh7392/project-ark.git
 cd project-ark
 ```
 
-**Run a module:**
+**Run an app:**
 
 ```bash
-# ATS matcher (needs the Word2Vec model — see projects/ats/README.md)
-cd projects/ats && uv sync && uv run uvicorn app.main:app --reload
+# ATS matcher (needs the Word2Vec model — see apps/ats/README.md)
+cd apps/ats && uv sync && uv run uvicorn app.main:app --reload
 
 # LexiScan classifier
-cd projects/lexiscan && uv sync && uv run python main.py "The app crashes every time I log in"
+cd apps/lexiscan && uv sync && uv run python main.py "The app crashes every time I log in"
 ```
 
-**Run the tests:**
+**Run the checks:**
 
 ```bash
-cd projects/ats && W2V_MODEL_PATH=/nonexistent uv run pytest
-cd projects/lexiscan && uv run pytest
+make ci          # lint + tests for every app + secret scan, from the repo root
+make help        # individual targets
 ```
 
 ---
@@ -122,12 +154,12 @@ cd projects/lexiscan && uv run pytest
 | Lint + format | [ruff](https://github.com/astral-sh/ruff) |
 | Secret scanning | [gitleaks](https://github.com/gitleaks/gitleaks) |
 | Pre-commit hooks | [pre-commit](https://pre-commit.com/) |
-| CI | GitHub Actions |
+| CI | `make ci` locally; GitHub Actions runs the same targets |
 
 **Set up pre-commit locally (one-time):**
 
 ```bash
-pip install pre-commit && pre-commit install
+make hooks
 ```
 
 ---

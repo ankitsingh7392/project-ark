@@ -34,8 +34,8 @@ jobs:
       fail-fast: false
       matrix:
         project:
-          - projects/ats
-          - projects/lexiscan
+          - apps/ats
+          - apps/lexiscan
     steps:
       - uses: actions/checkout@v4
 
