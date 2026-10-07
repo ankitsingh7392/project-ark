@@ -28,10 +28,3 @@ repos:
       - id: ruff
         args: [--fix]
       - id: ruff-format
-
-  # Shell scripts
-  - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: v0.10.0.1
-    hooks:
-      - id: shellcheck
-        files: \.sh$

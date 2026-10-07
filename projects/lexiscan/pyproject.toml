@@ -1,7 +1,7 @@
 [project]
 name = "lexiscan"
 version = "0.1.0"
-description = "CPU-only enterprise text classifier: Bag-of-Words / TF-IDF vectorisation with a Multinomial Naïve Bayes classifier and confidence-thresholded routing."
+description = "CPU-only text classifier: Bag-of-Words / TF-IDF vectorisation with a Multinomial Naïve Bayes classifier and confidence-thresholded routing."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

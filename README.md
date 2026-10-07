@@ -1,6 +1,6 @@
 # Project Ark
 
-> A monorepo of focused, production-oriented AI/ML modules — each solving a real problem independently, sharing a unified infrastructure and toolchain.
+> A monorepo of focused, production-oriented AI/ML services — each solving a real problem independently, sharing one toolchain and CI pipeline.
 
 [![CI](https://github.com/ankitsingh7392/project-ark/actions/workflows/ci.yml/badge.svg)](https://github.com/ankitsingh7392/project-ark/actions/workflows/ci.yml)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-3776AB.svg?logo=python&logoColor=white)](https://www.python.org/)
@@ -11,13 +11,10 @@
 
 ## Modules
 
-| Module | Domain | Core Technique | Status |
-|--------|--------|---------------|--------|
-| [**projects/ats**](projects/ats/) | Recruitment automation | TF-IDF weighted Word2Vec + fuzzy skill extraction | Active |
-| [**projects/lexiscan**](projects/lexiscan/) | Support ticket routing | Bag-of-Words / TF-IDF + Naïve Bayes | Active |
-| [**projects/review-classifier**](projects/review-classifier/) | E-commerce NLP | Feature engineering pipeline (OHE → BoW → TF-IDF) | WIP |
-| [**automation/n8n**](automation/n8n/) | Workflow infrastructure | Self-hosted n8n + Postgres on Docker Compose | Active |
-| [**automation/supermarket-ads**](automation/supermarket-ads/) | AI agent | Stock-aware promotional ad generation | Active |
+| Module | Domain | Core Technique | Interface |
+|--------|--------|---------------|-----------|
+| [**projects/ats**](projects/ats/) | Recruitment automation | TF-IDF weighted Word2Vec + fuzzy skill extraction | FastAPI REST service, Docker |
+| [**projects/lexiscan**](projects/lexiscan/) | Support ticket routing | TF-IDF + Multinomial Naïve Bayes with confidence thresholding | Python library + CLI |
 
 ---
 
@@ -25,9 +22,9 @@
 
 ### `projects/ats` — Resume ↔ Job Description Matcher
 
-Screens resumes semantically rather than by keyword overlap. A candidate who writes "ML" when the JD says "Machine Learning" should not be filtered out — this does not filter them out.
+Screens resumes semantically rather than by keyword overlap. A candidate who writes "ML" when the job description says "Machine Learning" is not filtered out.
 
-**How it works:** Text is preprocessed and embedded as TF-IDF weighted Word2Vec document vectors. Cosine similarity scores the match. A parallel fuzzy skill extractor (against a curated taxonomy of 160+ skills spanning 15 categories) produces a structured gap report: which skills the candidate has, which are missing, and how critical each gap is based on frequency in the JD.
+**How it works:** Text is preprocessed and embedded as TF-IDF weighted Word2Vec document vectors. Cosine similarity scores the match. A parallel fuzzy skill extractor (against a curated taxonomy of 160+ skills spanning 15 categories) produces a structured gap report: which skills the candidate has, which are missing, and how heavily the job description weights each gap.
 
 **Serves a REST API** via FastAPI — `POST /match`, `POST /rank`, `POST /gaps`.
 
@@ -41,11 +38,11 @@ JD     (text)  ──┘                                         ──► Skill
 
 ---
 
-### `projects/lexiscan` — Enterprise Text Classifier
+### `projects/lexiscan` — Support Ticket Classifier
 
-Routes incoming text (support tickets, emails, documents) to the correct department or category with a confidence score. Designed to run on CPU without a GPU or cloud dependency.
+Routes incoming text (support tickets, emails, documents) to the correct department with a confidence score. Runs on CPU with no GPU or cloud dependency.
 
-**How it works:** Vectorises text using `CountVectorizer` (BoW) or `TfidfVectorizer`. A Multinomial Naïve Bayes classifier is trained on labelled examples. At inference, the model returns the predicted category and a confidence percentage; predictions below a configurable threshold are returned as `"Unknown"` rather than a low-confidence guess.
+**How it works:** Text is vectorised with `TfidfVectorizer` (or `CountVectorizer`) and classified by a Multinomial Naïve Bayes model trained on labelled examples. At inference the model returns the predicted category and a confidence percentage; predictions below a configurable threshold are returned as `Unknown` rather than a low-confidence guess, so they can be escalated to a human.
 
 ```
 Raw text ──► Vectoriser (BoW / TF-IDF) ──► Naïve Bayes ──► Category + Confidence
@@ -55,38 +52,12 @@ Raw text ──► Vectoriser (BoW / TF-IDF) ──► Naïve Bayes ──► Ca
 
 ---
 
-### `projects/review-classifier` — NLP Feature Engineering Pipeline
-
-An end-to-end pipeline that scrapes real product reviews, engineers numerical features three ways, and benchmarks classifiers against each feature set.
-
-```
-Web scrape (Playwright) ──► Preprocess ──► OHE / BoW / TF-IDF
-    ──► Sparsity analysis ──► Logistic Regression vs Naïve Bayes benchmark
-```
-
-**Status:** the Playwright scraper is implemented; the feature-engineering and classifier-benchmark stages are in progress. The working hypothesis — that TF-IDF + Logistic Regression beats raw Bag-of-Words as a baseline before reaching for embeddings — will be reported with numbers once the evaluation code lands.
-
-→ Full docs: [`projects/review-classifier/README.md`](projects/review-classifier/README.md)
-
----
-
-### `automation/` — Workflow Automation
-
-Two independent setups built on self-hosted [n8n](https://n8n.io/):
-
-- **`automation/n8n`** — Docker Compose stack: n8n + Postgres + task runners. Fully configured via `.env`; no credentials in source.
-- **`automation/supermarket-ads`** — Python agent that reads live stock/pricing data from an inventory sheet and generates promotional ad copy for products with healthy margin.
-
-→ Setup: [`automation/n8n/.env.example`](automation/n8n/.env.example)
-
----
-
 ## Repository Structure
 
 ```
 project-ark/
 │
-├── projects/                       # Importable Python modules
+├── projects/
 │   ├── ats/                        # Resume ↔ JD semantic matcher (FastAPI)
 │   │   ├── app/                    # Application package
 │   │   │   ├── main.py             # FastAPI app & endpoints
@@ -99,23 +70,14 @@ project-ark/
 │   │   ├── tests/                  # Model-free pytest suite
 │   │   ├── Dockerfile
 │   │   └── pyproject.toml
-│   ├── lexiscan/                   # Text classification engine
-│   │   ├── lexiscan.py             # BoW/TF-IDF + Naïve Bayes model
-│   │   ├── main.py                 # Training + inference entrypoint
-│   │   └── data/
-│   └── review-classifier/          # NLP feature engineering pipeline (WIP)
-│       ├── scraper.py              # Playwright-based review scraper
-│       └── tests/
+│   └── lexiscan/                   # Text classification engine
+│       ├── lexiscan.py             # TF-IDF / BoW + Naïve Bayes model
+│       ├── main.py                 # Train + classify CLI
+│       ├── data/                   # Labelled training tickets
+│       ├── tests/
+│       └── pyproject.toml
 │
-├── automation/                     # Workflow agents and automation scripts
-│   ├── n8n/                        # Self-hosted n8n + Postgres stack
-│   └── supermarket-ads/            # Stock-aware ad generation agent
-│
-├── infra/                          # Infrastructure management
-│   ├── infra.sh                    # Service manager (up/down/logs/status)
-│   └── postgres/                   # Postgres + pgAdmin compose stack
-│
-├── .github/workflows/ci.yml        # CI pipeline
+├── .github/workflows/              # CI: lint, tests per module, secret scan
 ├── .pre-commit-config.yaml         # Pre-commit hooks
 ├── .gitleaks.toml                  # Secret scan config
 └── pyproject.toml                  # Shared ruff config (each module locks deps independently)
@@ -125,31 +87,28 @@ project-ark/
 
 ## Getting Started
 
-This repo uses [uv](https://github.com/astral-sh/uv) for dependency management.
+This repo uses [uv](https://github.com/astral-sh/uv) for dependency management. Each module is a standalone project with its own lockfile.
 
 ```bash
 git clone https://github.com/ankitsingh7392/project-ark.git
 cd project-ark
 ```
 
-**Run a specific package:**
+**Run a module:**
 
 ```bash
 # ATS matcher (needs the Word2Vec model — see projects/ats/README.md)
 cd projects/ats && uv sync && uv run uvicorn app.main:app --reload
 
 # LexiScan classifier
-cd projects/lexiscan && uv sync && uv run python main.py
+cd projects/lexiscan && uv sync && uv run python main.py "The app crashes every time I log in"
 ```
 
-**Start infrastructure:**
+**Run the tests:**
 
 ```bash
-# First run — prompts for credentials, saves to ~/.secrets/.env
-./infra/infra.sh up postgres
-
-./infra/infra.sh status
-./infra/infra.sh logs postgres
+cd projects/ats && W2V_MODEL_PATH=/nonexistent uv run pytest
+cd projects/lexiscan && uv run pytest
 ```
 
 ---
@@ -162,7 +121,6 @@ cd projects/lexiscan && uv sync && uv run python main.py
 | Testing | [pytest](https://docs.pytest.org/) |
 | Lint + format | [ruff](https://github.com/astral-sh/ruff) |
 | Secret scanning | [gitleaks](https://github.com/gitleaks/gitleaks) |
-| Shell lint | [shellcheck](https://www.shellcheck.net/) |
 | Pre-commit hooks | [pre-commit](https://pre-commit.com/) |
 | CI | GitHub Actions |
 

@@ -1,10 +1,10 @@
 # Repository root — holds shared tooling config (ruff, pytest) only.
-# Each module under projects/ and automation/ is a standalone uv project with
+# Each module under projects/ is a standalone uv project with
 # its own pyproject.toml and lockfile; see CONTRIBUTING.md.
 [project]
 name = "project-ark"
 version = "0.1.0"
-description = "A monorepo of focused, production-oriented AI/ML modules sharing a unified toolchain and infrastructure."
+description = "A monorepo of focused, production-oriented AI/ML modules sharing a unified toolchain and CI pipeline."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = []
