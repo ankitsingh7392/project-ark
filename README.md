@@ -15,6 +15,7 @@
 |--------|--------|---------------|-----------|
 | [**apps/ats**](apps/ats/) | Recruitment automation | TF-IDF weighted Word2Vec + fuzzy skill extraction | FastAPI REST service, Docker |
 | [**apps/lexiscan**](apps/lexiscan/) | Support ticket routing | TF-IDF + Multinomial Naïve Bayes with confidence thresholding | Python library + CLI |
+| [**apps/finrag**](apps/finrag/) | Financial document intelligence (SEC filings) | Hybrid retrieval + reranking + cited generation, eval-gated — *scaffold* | FastAPI REST service, Docker Compose |
 
 ---
 
@@ -49,6 +50,16 @@ Raw text ──► Vectoriser (BoW / TF-IDF) ──► Naïve Bayes ──► Ca
 ```
 
 → Full docs: [`apps/lexiscan/README.md`](apps/lexiscan/README.md)
+
+### `apps/finrag` — SEC Filings RAG Platform *(scaffold)*
+
+Answers an analyst's questions about 10-K / 10-Q filings with the stated figure and a citation to the page, and refuses when the filing does not contain the answer. The deliverable is the measurement: a golden set written from the documents, retrieval and generation scored separately, and an ablation table showing what each change bought.
+
+```
+Filing ──► Parser ──► Structure-aware chunks ──► pgvector + FTS ──► Hybrid + RRF ──► Rerank ──► Cited answer / refusal
+```
+
+→ Full docs: [`apps/finrag/README.md`](apps/finrag/README.md)
 
 ---
 
@@ -99,11 +110,19 @@ project-ark/
 │   │   ├── tests/                  # Model-free pytest suite
 │   │   ├── Dockerfile
 │   │   └── pyproject.toml
-│   └── lexiscan/                   # Text classification engine
-│       ├── lexiscan.py             # TF-IDF / BoW + Naïve Bayes model
-│       ├── main.py                 # Train + classify CLI
-│       ├── data/                   # Labelled training tickets
+│   ├── lexiscan/                   # Text classification engine
+│   │   ├── lexiscan.py             # TF-IDF / BoW + Naïve Bayes model
+│   │   ├── main.py                 # Train + classify CLI
+│   │   ├── data/                   # Labelled training tickets
+│   │   ├── tests/
+│   │   └── pyproject.toml
+│   └── finrag/                     # SEC filings RAG platform (scaffold)
+│       ├── app/                    # FastAPI: config, API contract, /health
+│       ├── data/golden_set.jsonl   # Q/A pairs written from the filings
+│       ├── evals/                  # Golden-set schema + eval runner (merge gate)
+│       ├── docs/                   # brief, architecture (C4), ADRs
 │       ├── tests/
+│       ├── docker-compose.yml      # Postgres + pgvector, API
 │       └── pyproject.toml
 │
 ├── libs/                           # Shared code, created only when a pattern repeats across apps (ADR 002)

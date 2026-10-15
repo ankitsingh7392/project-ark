@@ -1,7 +1,7 @@
 # Local CI. Runs the same checks as .github/workflows/ci.yml without using
 # Actions minutes. `make ci` before every pull request.
 
-APPS := apps/ats apps/lexiscan
+APPS := apps/ats apps/lexiscan apps/finrag
 
 # Tests are model-free; this path makes the ATS matcher skip loading the
 # multi-GB Word2Vec vectors, exactly as CI does.

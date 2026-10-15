@@ -36,6 +36,7 @@ jobs:
         project:
           - apps/ats
           - apps/lexiscan
+          - apps/finrag
     steps:
       - uses: actions/checkout@v4
 
