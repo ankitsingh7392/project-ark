@@ -1,0 +1,26 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: finrag
+      POSTGRES_PASSWORD: finrag
+      POSTGRES_DB: finrag
+    ports: ["5432:5432"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U finrag"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+
+  api:
+    build: .
+    environment:
+      DATABASE_URL: postgresql://finrag:finrag@db:5432/finrag
+    ports: ["8000:8000"]
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:

@@ -33,7 +33,7 @@ Record the type at the top of the app's `CHECKLIST.md`. It drives every
 |------|------------|--------------|
 | **ML-SVC** | Classical or statistical ML model served over an API or CLI. No external model provider. | `ats`, `lexiscan` |
 | **LLM-SVC** | Calls a hosted or local LLM; prompts are part of the system. | — |
-| **RAG** | LLM-SVC plus a retrieval layer. | — |
+| **RAG** | LLM-SVC plus a retrieval layer. | `finrag` |
 | **AGENT** | LLM-SVC that calls tools or takes multi-step actions. | — |
 
 "All" means every type. `(ML-SVC: reduced)` means a lighter variant described
